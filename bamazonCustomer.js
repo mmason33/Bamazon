@@ -35,18 +35,7 @@ function askCustomerForId(){
     inquirer.prompt([
         {
             name: 'product_id',
-            message: 'Please enter the ID of the product you would like to purchase'
-            // validate: function (input) {
-            //     var done = this.async();
-            
-            //     setTimeout(function () {
-            //     if (typeof input !== 'number') {
-            //         done('You need to provide a number');
-            //         return;
-            //     }
-            //     done(null, true);
-            //     }, 3000);
-            // }
+            message: 'Please enter the ID of the product you would like to purchase',
         }
 
     ]).then( function (answer) {
