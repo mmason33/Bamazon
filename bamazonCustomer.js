@@ -64,11 +64,23 @@ function askCustomForQuanity(id) {
         
         connection.query('SELECT * FROM PRODUCTS WHERE item_id=' + id, function (error, results, fields) {
             if (error) throw error;
-            console.log(results);
+            if (quanity.quanity > results[0].stock_quanity) {
+                console.log('Not enough in stock!');
+            } else {
+                updateQuanity(id, results[0].stock_quanity, quanity.quanity);
+            }
+
           });
-           
-        connection.end();
     });
+}
+
+function updateQuanity(id, current_stock, quanity_need) {
+    connection.query('UPDATE PRODUCTS SET stock_quanity =' + (current_stock - quanity_need) + ' WHERE item_id =' + id, function (error, results, fields) {
+        if (error) throw error;
+        console.log(results);
+    });
+
+    connection.end();
 }
 
 customer();
