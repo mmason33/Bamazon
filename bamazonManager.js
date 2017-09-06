@@ -128,35 +128,48 @@ function addInventory() {
                 choices: function () {
                     let productList = [];
                     for (let item in results){
-                        productList.push({name: results[item].product_name, inventory: results[item].stock_quanity});
+                        productList.push(results[item].product_name);
                     }
                     console.log(productList);
                     return productList;
                 }
             }
         ]).then( function(choice) {
-            console.log(choice.inventory);
-            inquirer.prompt([
+
+            connection.query(
+                'SELECT stock_quanity FROM PRODUCTS WHERE ?',
                 {
-                    name: 'amount',
-                    message: 'How much do you want to add?'
+                    product_name: choice.product_name
+                },
+                function (error, results, fields) {
+                    if (error) throw error;
+                    let currentInventory = results[0].stock_quanity;
+                    console.log(currentInventory);
+
+                    inquirer.prompt([
+                        {
+                            name: 'amount',
+                            message: 'How much do you want to add?'
+                        }
+                    ]).then( function (amount) {
+                        let newAmount = parseFloat(currentInventory) + parseFloat(amount.amount);
+                        connection.query(
+                            'UPDATE PRODUCTS SET stock_quanity=' + newAmount + ' WHERE ?',
+                            {
+                                product_name: choice.product_name
+                            },
+                            function (error, results, fields) {
+                                if (error) throw error;
+                                console.log('Inventory Updated!');
+                            }
+                        );
+
+                        connection.end();
+                    });
                 }
-            ]).then( function (amount) {
-                connection.query(
-                    'UPDATE PRODUCTS SET stock_quanity=' + amount.amount + ' WHERE ?',
-                    {
-                        product_name: choice.product_name
-                    },
-                    function (error, results, fields) {
-                        if (error) throw error;
-                        console.log(results);
-                    }
-                );
-            });
+            );
         });
-
     });    
-
 }
 
 
