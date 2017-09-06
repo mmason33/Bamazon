@@ -67,6 +67,8 @@ function askCustomForQuanity(id) {
             if (quanity.quanity > results[0].stock_quanity) {
                 console.log('Not enough in stock!');
             } else {
+                let totalPrice = quanity.quanity * results[0].price;
+                console.log("You've purchased " + quanity.quanity + " " + results[0].product_name + "s costing a total of $" + totalPrice);
                 updateQuanity(id, results[0].stock_quanity, quanity.quanity);
             }
 
@@ -77,7 +79,6 @@ function askCustomForQuanity(id) {
 function updateQuanity(id, current_stock, quanity_need) {
     connection.query('UPDATE PRODUCTS SET stock_quanity =' + (current_stock - quanity_need) + ' WHERE item_id =' + id, function (error, results, fields) {
         if (error) throw error;
-        console.log(results);
     });
 
     connection.end();
