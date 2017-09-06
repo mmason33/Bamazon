@@ -24,17 +24,17 @@ function customer() {
                 );
                 console.log('/--------------------------------------------------------------------------/');
             } 
-            askCustomer();
+            askCustomerForId();
     
       });
        
-    connection.end();
+    // connection.end();
 }
 
-function askCustomer(){
+function askCustomerForId(){
     inquirer.prompt([
         {
-            name: 'product',
+            name: 'product_id',
             message: 'Please enter the ID of the product you would like to purchase'
             // validate: function (input) {
             //     var done = this.async();
@@ -50,8 +50,25 @@ function askCustomer(){
         }
 
     ]).then( function (answer) {
-
+        askCustomForQuanity(answer.product_id);
     })
+}
+
+function askCustomForQuanity(id) {
+    inquirer.prompt([
+        {
+            name: 'quanity',
+            message: 'How many would you like to buy?'
+        }
+    ]).then( function (quanity) {
+        
+        connection.query('SELECT * FROM PRODUCTS WHERE item_id=' + id, function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+          });
+           
+        connection.end();
+    });
 }
 
 customer();
