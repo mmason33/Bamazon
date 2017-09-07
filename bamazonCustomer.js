@@ -27,8 +27,6 @@ function customer() {
             askCustomerForId();
     
       });
-       
-    // connection.end();
 }
 
 function askCustomerForId(){
