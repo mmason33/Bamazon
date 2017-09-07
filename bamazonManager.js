@@ -16,7 +16,6 @@ function viewProduct() {
             choices: ['View all products', 'View low inventory', 'Add inventory', 'Add new product']
         }
     ]).then( function (inventory) {
-        console.log(inventory.view_inventory);
         switch (inventory.view_inventory) {
             case 'View all products':
                 viewAllInventory();
@@ -31,7 +30,6 @@ function viewProduct() {
                 addProduct();
             break;
         }
-
     });
 }
 
