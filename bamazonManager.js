@@ -47,30 +47,27 @@ function printer(error, results) {
     } 
 }
 
-function viewAllInventory() {
-
+function query(query, callback) {
     connection.connect();
 
-    connection.query('SELECT * FROM PRODUCTS', function (error, results, fields) {
-        printer(error, results);
-    });
+    connection.query(query, callback);
 
     connection.end();
+}
+
+function viewAllInventory() {
+    query('SELECT * FROM PRODUCTS', function(error, results,fields) {
+        printer(error, results);
+    });
 }
 
 function viewLowInventory() {
-
-    connection.connect();
-
-    connection.query('SELECT * FROM PRODUCTS WHERE stock_quanity<=3', function (error, results, fields) {
+    query('SELECT * FROM PRODUCTS WHERE stock_quanity<=10', function (error, results, fields) {
         printer(error, results);
-    });  
-    
-    connection.end();
+    });
 }
 
 function addProduct() {
-
     inquirer.prompt([
         {
             name: 'product_name',
@@ -89,10 +86,7 @@ function addProduct() {
             message: 'How much of the product will there be?'
         }
     ]).then( function (new_product) {
-
-        connection.connect();
-
-        connection.query(
+        query(
             "INSERT INTO PRODUCTS SET ?",
             {
                 product_name: new_product.product_name,
@@ -101,13 +95,10 @@ function addProduct() {
                 stock_quanity: new_product.inventory
             }, 
             function (error, results, fields){
-            if (error) throw error;
-            console.log('New product added!');
-        });
-
-        connection.end();
-
-
+                if (error) throw error;
+                console.log('New product added!');
+            }
+        );
     });
 
 }
